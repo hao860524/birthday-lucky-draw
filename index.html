@@ -10,11 +10,11 @@
 
 :root {
   --rose:   #d4617a;
-  --blush:  #f2a8b8;
+  --blush:  #f77994;
   --gold:   #c9a96e;
   --cream:  #fdf6f0;
-  --deep:   #2c1a22;
-  --glass:  rgba(255,255,255,0.18);
+  --deep:   #38242d;
+  --glass:  rgba(255,255,255,0.5);
 }
 
 body {
@@ -198,7 +198,6 @@ canvas#wheel {
 }
 .coupon {
   background: var(--glass);
-  backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 14px;
   padding: 12px 8px;
@@ -208,7 +207,7 @@ canvas#wheel {
 .coupon::before {
   content: '';
   position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--rose), var(--gold));
+  background: linear-gradient(90deg, var(--rose), var(--deep));
 }
 .coupon:hover { transform: translateY(-2px); }
 .c-icon  { font-size: 1.5rem; display: block; margin-bottom: 3px; }
@@ -218,13 +217,13 @@ canvas#wheel {
   color: white;
   display: block; margin-bottom: 2px;
 }
-.c-count { font-size: 0.68rem; color: var(--blush); }
-.c-count b { color: var(--gold); font-size: 0.9rem; }
+.c-count { font-size: 0.75rem; color: var(--rose); font-weight: 700;}
+.c-count b { color: var(--deep); font-size: 0.9rem; }
 
 /* ── ADD BUTTON (fixed corner) ── */
 .add-btn {
-  position: fixed;
-  bottom: 24px; right: 5px;
+  position: static;
+  margin: 16px 0 0 auto; 
   width: 46px; height: 46px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,0.3);
@@ -238,6 +237,7 @@ canvas#wheel {
   z-index: 100;
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
+
 .add-btn:hover {
   background: rgba(255,255,255,0.25);
   color: white;
@@ -317,6 +317,8 @@ canvas#wheel {
 
   <div class="coupon-label">✦ 兌換券庫存 ✦</div>
   <div class="coupons" id="coupons"></div>
+  <!-- Fixed + button bottom-right -->
+  <button class="add-btn" onclick="addChance()" title="增加抽獎次數">＋</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -324,14 +326,14 @@ canvas#wheel {
 <script>
 // ====== 獎勵池 ======
 const prizes = [
-  { icon:"🥵", name:"色色券",   sub:"可以瑟瑟", stars:5, rarity:12.5, color:"#b03060", reroll:false },
-  { icon:"🫂", name:"拍拍券",   sub:"寶包最棒( ・ω・)ﾉ(._.`)", stars:4, rarity:12.5, color:"#c0526e", reroll:false },
-  { icon:"🥺", name:"撒嬌券",   sub:"寶包貼貼", stars:3, rarity:12.5, color:"#d4617a", reroll:false },
-  { icon:"💆", name:"按摩券",   sub:"放鬆療癒解除緊繃",stars:4, rarity:12.5, color:"#a03858", reroll:false },
-  { icon:"😜", name:"鬼臉券",   sub:"索取一個搞怪鬼臉", stars:3, rarity:12.5, color:"#e07a90", reroll:false },
-  { icon:"🙈", name:"肉麻券",   sub:"聽一段甜言蜜語",   stars:4, rarity:12.5, color:"#c96878", reroll:false },
-  { icon:"🌠", name:"許願券",   sub:"向流星許願太麻煩了",stars:5, rarity:12.5, color:"#9e3060", reroll:false },
-  { icon:"🎰", name:"再抽一次", sub:"再轉一次！",stars:3, rarity:12.5, color:"#c9456a", reroll:true  },
+  { icon:"🥵", name:"色色券",   sub:"可以瑟瑟", stars:5, rarity:30, color:"#b03060", reroll:false },
+  { icon:"🫂", name:"拍拍券",   sub:"寶包最棒( ・ω・)ﾉ(._.`)", stars:4, rarity:10, color:"#c0526e", reroll:false },
+  { icon:"🥺", name:"撒嬌券",   sub:"寶包貼貼", stars:3, rarity:10, color:"#d4617a", reroll:false },
+  { icon:"💆", name:"按摩券",   sub:"放鬆療癒解除緊繃",stars:4, rarity:10, color:"#a03858", reroll:false },
+  { icon:"😜", name:"鬼臉券",   sub:"索取一個搞怪鬼臉", stars:3, rarity:10, color:"#e07a90", reroll:false },
+  { icon:"🙈", name:"肉麻券",   sub:"聽一段甜言蜜語",   stars:4, rarity:10, color:"#c96878", reroll:false },
+  { icon:"🌠", name:"許願券",   sub:"向流星許願太麻煩了",stars:5, rarity:10, color:"#9e3060", reroll:false },
+  { icon:"🎰", name:"再抽一次", sub:"再轉一次！",stars:3, rarity:10, color:"#c9456a", reroll:true  },
 ];
 // ====================
 
@@ -354,6 +356,7 @@ function drawWheel(angle) {
 
   for (let i = 0; i < NUM; i++) {
     const start = angle + i * ARC;
+    //const start = angle - Math.PI / 2 + i * ARC;
     const end   = start + ARC;
     const p     = prizes[i];
 
@@ -435,15 +438,20 @@ function spin() {
   document.getElementById("spinBtn").disabled = true;
   document.getElementById("resultCard").classList.remove("show");
 
-  const prize    = pickPrize();
+
+  const prize = pickPrize();
   const prizeIdx = prizes.indexOf(prize);
 
-  const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
-  const spins  = 5 + Math.random() * 3;
-  const normalizedCurrent = currentAngle % (Math.PI * 2);
-  const diff = ((targetSector - normalizedCurrent) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-  const target = currentAngle + Math.PI * 2 * spins + diff;
-  
+  const wheelIdx = (prizeIdx+1) % NUM;
+
+  const spins = 6;
+
+  const target =
+    currentAngle +
+    spins * Math.PI * 2 +
+    (Math.PI * 1.5) -
+    (wheelIdx * ARC - ARC / 2) -
+    (currentAngle % (Math.PI * 2));
 
   const duration = 4000;
   const start    = performance.now();
@@ -521,11 +529,23 @@ function showResult(prize, isNew) {
     showToast("🎉 恭喜獲得「" + prize.name + "」！");
   }
 }
+function useCoupon(name) {
+  const state = getState();
+  const counts = state.counts || {};
+  if ((counts[name] || 0) <= 0) {
+    showToast("沒有「" + name + "」了 💕");
+    return;
+  }
+  counts[name]--;
+  saveState({ ...state, counts });
+  renderCoupons();
+  showToast("✅ 使用了一張「" + name + "」！");
+}
 
 function renderCoupons() {
   const counts = (getState().counts) || {};
   document.getElementById("coupons").innerHTML = prizes.map(p => `
-    <div class="coupon">
+  <div class="coupon" onclick="useCoupon('${p.name}')" style="cursor:pointer;" title="點擊使用一張">
       <span class="c-icon">${p.icon}</span>
       <span class="c-name">${p.name}</span>
       <span class="c-count">擁有 <b>${counts[p.name] || 0}</b> 張</span>
@@ -586,7 +606,5 @@ function spawnConf() {
   });
 })();
 </script>
-  <!-- Fixed + button bottom-right -->
-  <button class="add-btn" onclick="addChance()" title="增加抽獎次數">＋</button>
 </body>
 </html>
