@@ -440,7 +440,6 @@ function spin() {
 
   const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
   const spins  = 5 + Math.random() * 3;
-  const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
   const normalizedCurrent = currentAngle % (Math.PI * 2);
   const diff = ((targetSector - normalizedCurrent) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
   const target = currentAngle + Math.PI * 2 * spins + diff;
