@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>每日抽卡 💕</title>
+<title>Birthday Lucky Draw</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,7 +61,7 @@ body {
 .header { margin-bottom: 20px; }
 .eyebrow {
   font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-style: normal;
   font-size: 0.85rem;
   letter-spacing: 0.35em;
   color: var(--blush);
@@ -139,7 +139,7 @@ canvas#wheel {
   border-radius: 50px;
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.3rem;
-  font-style: italic;
+  font-style: normal;
   letter-spacing: 0.12em;
   cursor: pointer;
   box-shadow: 0 8px 28px rgba(212,97,122,0.4);
@@ -183,7 +183,7 @@ canvas#wheel {
 /* ── COUPONS ── */
 .coupon-label {
   font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-style: normal;
   font-size: 0.9rem;
   letter-spacing: 0.25em;
   color: var(--blush);
@@ -223,8 +223,8 @@ canvas#wheel {
 
 /* ── ADD BUTTON (fixed corner) ── */
 .add-btn {
-  position: static;
-  bottom: 24px; right: 24px;
+  position: fixed;
+  bottom: 24px; right: 5px;
   width: 46px; height: 46px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,255,255,0.3);
@@ -305,7 +305,7 @@ canvas#wheel {
 
   <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:24px; gap:6px;">
     <button class="btn" style="margin-bottom:0;" id="spinBtn" onclick="spin()">抽卡</button>
-    <div id="chanceLabel" style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.82rem; color:rgba(255,255,255,0.55); letter-spacing:0.15em;">今日剩餘 1 次</div>
+    <div id="chanceLabel" style="font-family:'Cormorant Garamond',serif; font-style:normal; font-size:0.82rem; color:rgba(255,255,255,0.55); letter-spacing:0.15em;">今日剩餘 1 次</div>
   </div>
 
   <div class="result-card" id="resultCard">
@@ -315,7 +315,7 @@ canvas#wheel {
     <div class="result-sub"   id="rSub"></div>
   </div>
 
-  <div class="coupon-label">✦ 約會兌換券庫存 ✦</div>
+  <div class="coupon-label">✦ 兌換券庫存 ✦</div>
   <div class="coupons" id="coupons"></div>
 </div>
 
@@ -325,7 +325,7 @@ canvas#wheel {
 // ====== 獎勵池 ======
 const prizes = [
   { icon:"🥵", name:"色色券",   sub:"可以瑟瑟", stars:5, rarity:12.5, color:"#b03060", reroll:false },
-  { icon:"( ・ω・)ﾉ(._.`)", name:"拍拍券",   sub:"寶包最棒惹", stars:4, rarity:12.5, color:"#c0526e", reroll:false },
+  { icon:"🫂", name:"拍拍券",   sub:"寶包最棒( ・ω・)ﾉ(._.`)", stars:4, rarity:12.5, color:"#c0526e", reroll:false },
   { icon:"🥺", name:"撒嬌券",   sub:"寶包貼貼", stars:3, rarity:12.5, color:"#d4617a", reroll:false },
   { icon:"💆", name:"按摩券",   sub:"放鬆療癒解除緊繃",stars:4, rarity:12.5, color:"#a03858", reroll:false },
   { icon:"😜", name:"鬼臉券",   sub:"索取一個搞怪鬼臉", stars:3, rarity:12.5, color:"#e07a90", reroll:false },
@@ -440,7 +440,11 @@ function spin() {
 
   const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
   const spins  = 5 + Math.random() * 3;
-  const target = currentAngle + Math.PI * 2 * spins + targetSector - (currentAngle % (Math.PI * 2));
+  const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
+  const normalizedCurrent = currentAngle % (Math.PI * 2);
+  const diff = ((targetSector - normalizedCurrent) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  const target = currentAngle + Math.PI * 2 * spins + diff;
+  
 
   const duration = 4000;
   const start    = performance.now();
