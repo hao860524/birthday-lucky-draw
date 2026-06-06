@@ -4,240 +4,281 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>每日抽卡 💕</title>
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Playfair+Display:ital,wght@0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --pink: #ff7eb3;
-  --rose: #ff4d8d;
-  --gold: #f5c842;
-  --cream: #fff5f8;
-  --deep: #3a1a2a;
+  --rose:   #d4617a;
+  --blush:  #f2a8b8;
+  --gold:   #c9a96e;
+  --cream:  #fdf6f0;
+  --deep:   #2c1a22;
+  --glass:  rgba(255,255,255,0.18);
 }
 
 body {
   min-height: 100vh;
-  background: linear-gradient(145deg, #ffe0ec 0%, #ffd6e8 40%, #ffe8cc 100%);
-  font-family: 'Lato', sans-serif;
+  font-family: 'Noto Serif TC', serif;
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 32px 16px 48px;
   overflow-x: hidden;
+  position: relative;
 }
 
-/* floating petals */
-.petal {
-  position: fixed;
-  pointer-events: none;
-  font-size: 1.1rem;
-  opacity: 0;
-  animation: petalFall linear infinite;
-  z-index: 0;
+/* ── BACKGROUND ── */
+.bg {
+  position: fixed; inset: 0; z-index: 0;
+  background-image: url('photo.png');
+  background-size: cover;
+  background-position: center;
 }
-@keyframes petalFall {
-  0%   { transform: translateY(-20px) rotate(0deg); opacity: 0.7; }
-  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+.bg-overlay {
+  position: fixed; inset: 0; z-index: 1;
+  background: linear-gradient(
+    160deg,
+    rgba(44,26,34,0.72) 0%,
+    rgba(100,40,60,0.55) 50%,
+    rgba(44,26,34,0.78) 100%
+  );
+  backdrop-filter: blur(2px);
 }
 
+/* ── CONTENT ── */
 .wrap {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 380px;
+  position: relative; z-index: 2;
+  width: 100%; max-width: 420px;
   text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0;
 }
 
-.title {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.8rem;
-  color: var(--rose);
+/* Header */
+.header { margin-bottom: 20px; }
+.eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: var(--blush);
+  opacity: 0.85;
   margin-bottom: 4px;
-  text-shadow: 0 2px 10px rgba(255,77,141,0.2);
 }
-.subtitle {
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  color: #c07090;
-  margin-bottom: 28px;
-}
-
-/* ── CARD ── */
-.card-area {
-  perspective: 900px;
-  margin-bottom: 24px;
-}
-.card {
-  width: 100%;
-  height: 220px;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.7s cubic-bezier(.4,1.4,.6,1);
-  cursor: pointer;
-}
-.card.flipped { transform: rotateY(180deg); }
-
-.card-face {
-  position: absolute; inset: 0;
-  border-radius: 24px;
-  backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 12px 40px rgba(255,77,141,0.2), 0 2px 8px rgba(0,0,0,0.06);
-}
-
-/* Front */
-.card-front {
-  background: linear-gradient(135deg, #ff85b8, #ff4d8d);
+.main-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
   color: white;
+  text-shadow: 0 2px 20px rgba(212,97,122,0.4);
+  line-height: 1.1;
 }
-.card-front .card-pattern {
-  font-size: 4rem;
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100% { transform: scale(1); }
-  50%      { transform: scale(1.1); }
-}
-.card-front p {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.3rem;
-  opacity: 0.9;
-}
-
-/* Back */
-.card-back {
-  background: white;
-  transform: rotateY(180deg);
-  padding: 24px;
-}
-.stars {
-  font-size: 1.6rem;
-  letter-spacing: 4px;
-  animation: starGlow 1.5s ease-in-out infinite alternate;
-}
-@keyframes starGlow {
-  from { filter: drop-shadow(0 0 4px #f5c842); }
-  to   { filter: drop-shadow(0 0 14px #f5c842) brightness(1.2); }
-}
-.reward-icon { font-size: 3rem; margin: 6px 0; }
-.reward-text {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.5rem;
-  color: var(--rose);
-}
-.reward-sub {
-  font-size: 0.78rem;
-  color: #c07090;
-  margin-top: 2px;
-}
-
-/* ── DRAW BUTTON ── */
-.btn {
-  display: inline-block;
-  padding: 14px 44px;
-  background: linear-gradient(135deg, var(--rose), #c0306a);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.3rem;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(255,77,141,0.35);
-  transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 28px;
-}
-.btn:hover:not(:disabled) {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 14px 32px rgba(255,77,141,0.45);
-}
-.btn:disabled {
-  background: linear-gradient(135deg, #f0a0b8, #d07090);
-  cursor: not-allowed;
+.sub-title {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--blush);
+  margin-top: 6px;
   opacity: 0.7;
 }
 
-/* ── COUPON LIST ── */
-.coupon-title {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.1rem;
-  color: #a05070;
-  margin-bottom: 12px;
+/* ── WHEEL CONTAINER ── */
+.wheel-wrap {
+  position: relative;
+  width: 300px; height: 300px;
+  margin: 0 auto 16px;
+  filter: drop-shadow(0 8px 32px rgba(212,97,122,0.35));
+}
+
+canvas#wheel {
+  border-radius: 50%;
+  display: block;
+}
+
+/* Pointer */
+.pointer {
+  position: absolute;
+  top: -18px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 28px solid var(--gold);
+  filter: drop-shadow(0 2px 6px rgba(201,169,110,0.6));
+  z-index: 3;
+}
+
+/* Center circle */
+.wheel-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  z-index: 4;
+  animation: heartbeat 2.5s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%,100% { transform: translate(-50%,-50%) scale(1); }
+  50%      { transform: translate(-50%,-50%) scale(1.08); }
+}
+
+/* ── SPIN BUTTON ── */
+.btn {
+  padding: 13px 48px;
+  background: linear-gradient(135deg, var(--rose), #9e2a45);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(212,97,122,0.4);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 14px 36px rgba(212,97,122,0.55);
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── RESULT CARD ── */
+.result-card {
+  width: 100%;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s, transform 0.5s;
+  min-height: 80px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+}
+.result-card.show { opacity: 1; transform: translateY(0); }
+.result-stars { font-size: 1.3rem; letter-spacing: 3px; }
+.result-icon  { font-size: 2.4rem; margin: 4px 0; }
+.result-name  {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+}
+.result-sub   { font-size: 0.78rem; color: var(--blush); opacity: 0.85; }
+
+/* ── COUPONS ── */
+.coupon-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  letter-spacing: 0.25em;
+  color: var(--blush);
+  margin-bottom: 10px;
+  opacity: 0.8;
 }
 .coupons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
+  width: 100%;
 }
 .coupon {
-  background: white;
-  border-radius: 16px;
-  padding: 14px 10px;
-  box-shadow: 0 4px 16px rgba(255,77,141,0.1);
-  border: 1.5px solid rgba(255,120,180,0.15);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 12px 8px;
+  position: relative; overflow: hidden;
   transition: transform 0.2s;
-  position: relative;
-  overflow: hidden;
 }
 .coupon::before {
   content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--pink), var(--gold));
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--rose), var(--gold));
 }
-.coupon:hover { transform: translateY(-3px); }
-.coupon-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
-.coupon-name {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 0.95rem;
-  color: var(--rose);
-  display: block;
-  margin-bottom: 2px;
+.coupon:hover { transform: translateY(-2px); }
+.c-icon  { font-size: 1.5rem; display: block; margin-bottom: 3px; }
+.c-name  {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 0.78rem;
+  color: white;
+  display: block; margin-bottom: 2px;
 }
-.coupon-count {
-  font-size: 0.72rem;
-  color: #b08090;
+.c-count { font-size: 0.68rem; color: var(--blush); }
+.c-count b { color: var(--gold); font-size: 0.9rem; }
+
+/* ── ADD BUTTON (fixed corner) ── */
+.add-btn {
+  position: static;
+  bottom: 24px; right: 24px;
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.7);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
-.coupon-count span {
-  font-weight: 700;
-  color: var(--rose);
-  font-size: 0.9rem;
+.add-btn:hover {
+  background: rgba(255,255,255,0.25);
+  color: white;
+  transform: scale(1.12);
 }
 
 /* ── TOAST ── */
 .toast {
-  position: fixed;
-  bottom: 32px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--deep);
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(44,26,34,0.92);
+  border: 1px solid rgba(255,255,255,0.15);
   color: white;
-  padding: 10px 24px;
+  padding: 10px 26px;
   border-radius: 50px;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
   opacity: 0;
   transition: opacity 0.3s, transform 0.3s;
   pointer-events: none;
   white-space: nowrap;
   z-index: 999;
 }
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* petals */
+.petal {
+  position: fixed; pointer-events: none;
+  animation: petalFall linear infinite; z-index: 1; opacity: 0;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(-5vh) rotate(0deg); opacity: 0.6; }
+  100% { transform: translateY(108vh) rotate(400deg); opacity: 0; }
 }
 
 /* confetti */
 .conf {
-  position: fixed;
-  pointer-events: none;
-  z-index: 500;
-  font-size: 1.2rem;
-  animation: confDrop 2s ease-in forwards;
+  position: fixed; pointer-events: none; z-index: 500;
+  animation: cfall ease-in forwards;
 }
-@keyframes confDrop {
+@keyframes cfall {
   0%   { opacity: 1; transform: translateY(0) rotate(0deg); }
   100% { opacity: 0; transform: translateY(100vh) rotate(540deg); }
 }
@@ -245,31 +286,36 @@ body {
 </head>
 <body>
 
-<!-- Petals -->
+<div class="bg"></div>
+<div class="bg-overlay"></div>
 <div id="petals"></div>
 
 <div class="wrap">
-  <div class="title">🎴 每日抽卡</div>
-  <div class="subtitle">ONE DRAW PER DAY · 一天一次</div>
-
-  <div class="card-area">
-    <div class="card" id="card">
-      <div class="card-face card-front">
-        <div class="card-pattern">💝</div>
-        <p>點我抽卡</p>
-      </div>
-      <div class="card-face card-back" id="cardBack">
-        <div class="stars" id="stars">⭐⭐⭐⭐⭐</div>
-        <div class="reward-icon" id="rewardIcon">🎁</div>
-        <div class="reward-text" id="rewardText">獎勵名稱</div>
-        <div class="reward-sub" id="rewardSub">副標</div>
-      </div>
-    </div>
+  <div class="header">
+    <div class="eyebrow">for my love</div>
+    <div class="main-title">每日抽卡</div>
+    <div class="sub-title">ONE DRAW PER DAY</div>
   </div>
 
-  <button class="btn" id="drawBtn" onclick="draw()">✨ 抽卡 ✨</button>
+  <div class="wheel-wrap">
+    <div class="pointer"></div>
+    <canvas id="wheel" width="300" height="300"></canvas>
+    <div class="wheel-center">💝</div>
+  </div>
 
-  <div class="coupon-title">🏆 約會兌換券</div>
+  <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:24px; gap:6px;">
+    <button class="btn" style="margin-bottom:0;" id="spinBtn" onclick="spin()">抽卡</button>
+    <div id="chanceLabel" style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.82rem; color:rgba(255,255,255,0.55); letter-spacing:0.15em;">今日剩餘 1 次</div>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-stars" id="rStars"></div>
+    <div class="result-icon"  id="rIcon"></div>
+    <div class="result-name"  id="rName"></div>
+    <div class="result-sub"   id="rSub"></div>
+  </div>
+
+  <div class="coupon-label">✦ 約會兌換券庫存 ✦</div>
   <div class="coupons" id="coupons"></div>
 </div>
 
@@ -278,137 +324,266 @@ body {
 <script>
 // ====== 獎勵池 ======
 const prizes = [
-  { icon: "💆", name: "男友按摩券",  sub: "指定部位按摩10分鐘", stars: 5, rarity: 15 },
-  { icon: "🤗", name: "抱抱券",      sub: "隨時可兌換一個大擁抱", stars: 5, rarity: 25 },
-  { icon: "💑", name: "指定約會券",  sub: "妳說去哪就去哪", stars: 5, rarity: 10 },
-  { icon: "🥺", name: "無條件撒嬌券",sub: "無限接受妳的撒嬌", stars: 4, rarity: 30 },
-  { icon: "🍜", name: "煮飯券",      sub: "男友親手下廚一餐", stars: 4, rarity: 20 },
+  { icon:"🥵", name:"色色券",   sub:"可以瑟瑟", stars:5, rarity:12.5, color:"#b03060", reroll:false },
+  { icon:"( ・ω・)ﾉ(._.`)", name:"拍拍券",   sub:"寶包最棒惹", stars:4, rarity:12.5, color:"#c0526e", reroll:false },
+  { icon:"🥺", name:"撒嬌券",   sub:"寶包貼貼", stars:3, rarity:12.5, color:"#d4617a", reroll:false },
+  { icon:"💆", name:"按摩券",   sub:"放鬆療癒解除緊繃",stars:4, rarity:12.5, color:"#a03858", reroll:false },
+  { icon:"😜", name:"鬼臉券",   sub:"索取一個搞怪鬼臉", stars:3, rarity:12.5, color:"#e07a90", reroll:false },
+  { icon:"🙈", name:"肉麻券",   sub:"聽一段甜言蜜語",   stars:4, rarity:12.5, color:"#c96878", reroll:false },
+  { icon:"🌠", name:"許願券",   sub:"向流星許願太麻煩了",stars:5, rarity:12.5, color:"#9e3060", reroll:false },
+  { icon:"🎰", name:"再抽一次", sub:"再轉一次！",stars:3, rarity:12.5, color:"#c9456a", reroll:true  },
 ];
 // ====================
 
-const STORAGE_KEY = "luckydraw_v1";
+const STORAGE_KEY = "wheel_draw_v1";
+const NUM = prizes.length;
+const ARC = (Math.PI * 2) / NUM;
 
-function getState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
-}
+function getState() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
 function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
 
-function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+// ── Draw wheel ──
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+let currentAngle = 0;
+
+function drawWheel(angle) {
+  ctx.clearRect(0, 0, 300, 300);
+  const cx = 150, cy = 150, r = 148;
+
+  for (let i = 0; i < NUM; i++) {
+    const start = angle + i * ARC;
+    const end   = start + ARC;
+    const p     = prizes[i];
+
+    // Sector
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.25)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + ARC / 2);
+    ctx.textAlign = "right";
+
+    // Icon
+    ctx.font = "22px serif";
+    ctx.fillText(p.icon, r - 14, 8);
+
+    // Name
+    ctx.font = "600 11px 'Noto Serif TC', serif";
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.fillText(p.name, r - 46, 8);
+
+    ctx.restore();
+  }
+
+  // Outer ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(255,255,255,0.3)";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+drawWheel(0);
+
+// ── Chance label ──
+function updateLabel() {
+  const state = getState();
+  const today = todayStr();
+  const extra = (state.lastDraw !== today) ? 1 : 0;
+  const bonus = state.bonus || 0;
+  const total = (state.lastDraw !== today ? 1 : 0) + bonus;
+  document.getElementById("chanceLabel").textContent =
+    total > 0 ? `今日剩餘 ${total} 次` : "今日已抽完 💕";
+}
+
+// ── Weighted random ──
+function pickPrize() {
+  const total = prizes.reduce((s, p) => s + p.rarity, 0);
+  let r = Math.random() * total;
+  for (const p of prizes) { r -= p.rarity; if (r <= 0) return p; }
+  return prizes[prizes.length - 1];
+}
+
+// ── Spin ──
+let spinning = false;
+
+function spin() {
+  const state = getState();
+  const today = todayStr();
+  const alreadyDrawn = state.lastDraw === today;
+  const bonus = state.bonus || 0;
+
+  if (alreadyDrawn && bonus <= 0) {
+    showResult(prizes.find(p => p.name === state.lastPrize) || prizes[0], false);
+    showToast("今天已經抽過囉！明天再來 💕");
+    return;
+  }
+
+  if (spinning) return;
+  spinning = true;
+  document.getElementById("spinBtn").disabled = true;
+  document.getElementById("resultCard").classList.remove("show");
+
+  const prize    = pickPrize();
+  const prizeIdx = prizes.indexOf(prize);
+
+  const targetSector = -(prizeIdx * ARC + ARC / 2) - Math.PI / 2;
+  const spins  = 5 + Math.random() * 3;
+  const target = currentAngle + Math.PI * 2 * spins + targetSector - (currentAngle % (Math.PI * 2));
+
+  const duration = 4000;
+  const start    = performance.now();
+  const from     = currentAngle;
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function frame(now) {
+    const elapsed = now - start;
+    const t = Math.min(elapsed / duration, 1);
+    currentAngle = from + (target - from) * easeOut(t);
+    drawWheel(currentAngle);
+
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      currentAngle = target;
+      spinning = false;
+
+      // Deduct chance
+      const newBonus = alreadyDrawn ? bonus - 1 : bonus;
+      const counts = state.counts || {};
+      if (!prize.reroll) counts[prize.name] = (counts[prize.name] || 0) + 1;
+      saveState({ lastDraw: today, lastPrize: prize.name, counts, bonus: Math.max(0, newBonus) });
+
+      showResult(prize, true);
+      renderCoupons();
+      updateLabel();
+
+      // If reroll, re-enable after short delay
+      if (prize.reroll) {
+        showToast("🎰 再抽一次！");
+        setTimeout(() => {
+          document.getElementById("spinBtn").disabled = false;
+          // grant one bonus spin
+          const s2 = getState();
+          s2.bonus = (s2.bonus || 0) + 1;
+          saveState(s2);
+          updateLabel();
+        }, 1200);
+      } else {
+        const remaining = (getState().bonus || 0);
+        if (remaining > 0) {
+          document.getElementById("spinBtn").disabled = false;
+        } else {
+          document.getElementById("spinBtn").disabled = true;
+          document.getElementById("spinBtn").textContent = "今日已抽完";
+        }
+      }
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+function addChance() {
+  const state = getState();
+  state.bonus = (state.bonus || 0) + 1;
+  saveState(state);
+  document.getElementById("spinBtn").disabled = false;
+  document.getElementById("spinBtn").textContent = "抽卡";
+  document.getElementById("resultCard").classList.remove("show");
+  updateLabel();
+  showToast("➕ 已新增一次抽獎機會！");
+}
+
+function showResult(prize, isNew) {
+  document.getElementById("rStars").textContent = "⭐".repeat(prize.stars);
+  document.getElementById("rIcon").textContent  = prize.icon;
+  document.getElementById("rName").textContent  = "獲得 " + prize.name;
+  document.getElementById("rSub").textContent   = prize.sub;
+  setTimeout(() => document.getElementById("resultCard").classList.add("show"), 100);
+  if (isNew) {
+    spawnConf();
+    showToast("🎉 恭喜獲得「" + prize.name + "」！");
+  }
 }
 
 function renderCoupons() {
-  const state = getState();
-  const counts = state.counts || {};
-  const el = document.getElementById("coupons");
-  el.innerHTML = prizes.map(p => `
+  const counts = (getState().counts) || {};
+  document.getElementById("coupons").innerHTML = prizes.map(p => `
     <div class="coupon">
-      <span class="coupon-icon">${p.icon}</span>
-      <span class="coupon-name">${p.name}</span>
-      <span class="coupon-count">擁有 <span>${counts[p.name] || 0}</span> 張</span>
-    </div>
-  `).join("");
+      <span class="c-icon">${p.icon}</span>
+      <span class="c-name">${p.name}</span>
+      <span class="c-count">擁有 <b>${counts[p.name] || 0}</b> 張</span>
+    </div>`).join("");
 }
 
 function showToast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg;
   t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2800);
+  setTimeout(() => t.classList.remove("show"), 3000);
 }
 
 function spawnConf() {
-  const emojis = ["💕","🌸","⭐","🎉","✨","💖","🌷"];
-  for (let i = 0; i < 30; i++) {
+  const e = ["🥂","🧁","🥧","🍾","⭐","✨","🥳"];
+  for (let i = 0; i < 35; i++) {
     setTimeout(() => {
       const c = document.createElement("div");
       c.className = "conf";
-      c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      c.style.left = Math.random() * 100 + "vw";
-      c.style.top = "-10px";
-      c.style.animationDuration = (1.5 + Math.random() * 1.5) + "s";
+      c.textContent = e[Math.floor(Math.random() * e.length)];
+      c.style.cssText = `left:${Math.random()*100}vw;top:-10px;font-size:${1+Math.random()}rem;animation-duration:${1.8+Math.random()*1.5}s`;
       document.body.appendChild(c);
       setTimeout(() => c.remove(), 3500);
-    }, Math.random() * 600);
+    }, Math.random() * 500);
   }
-}
-
-function draw() {
-  const state = getState();
-  const today = todayStr();
-
-  if (state.lastDraw === today) {
-    // Already drawn — just flip to show result again
-    const card = document.getElementById("card");
-    if (!card.classList.contains("flipped")) card.classList.add("flipped");
-    showToast("今天已經抽過囉！明天再來 💕");
-    return;
-  }
-
-  // Weighted random
-  const total = prizes.reduce((s, p) => s + p.rarity, 0);
-  let r = Math.random() * total;
-  let prize = prizes[prizes.length - 1];
-  for (const p of prizes) { r -= p.rarity; if (r <= 0) { prize = p; break; } }
-
-  // Update state
-  const counts = state.counts || {};
-  counts[prize.name] = (counts[prize.name] || 0) + 1;
-  saveState({ lastDraw: today, lastPrize: prize.name, counts });
-
-  // Fill card back
-  document.getElementById("stars").textContent = "⭐".repeat(prize.stars);
-  document.getElementById("rewardIcon").textContent = prize.icon;
-  document.getElementById("rewardText").textContent = "獲得 " + prize.name;
-  document.getElementById("rewardSub").textContent = prize.sub;
-
-  // Flip
-  setTimeout(() => {
-    document.getElementById("card").classList.add("flipped");
-    spawnConf();
-    showToast("🎉 恭喜獲得「" + prize.name + "」！");
-  }, 100);
-
-  document.getElementById("drawBtn").disabled = true;
-  document.getElementById("drawBtn").textContent = "今天已抽卡 💕";
-
-  renderCoupons();
 }
 
 // Init
-(function init() {
+(function() {
   const state = getState();
   const today = todayStr();
+  const bonus = state.bonus || 0;
 
-  // Restore if already drawn today
   if (state.lastDraw === today && state.lastPrize) {
     const prize = prizes.find(p => p.name === state.lastPrize) || prizes[0];
-    document.getElementById("stars").textContent = "⭐".repeat(prize.stars);
-    document.getElementById("rewardIcon").textContent = prize.icon;
-    document.getElementById("rewardText").textContent = "獲得 " + prize.name;
-    document.getElementById("rewardSub").textContent = prize.sub;
-    document.getElementById("card").classList.add("flipped");
-    document.getElementById("drawBtn").disabled = true;
-    document.getElementById("drawBtn").textContent = "今天已抽卡 💕";
+    showResult(prize, false);
+    if (bonus <= 0) {
+      document.getElementById("spinBtn").disabled = true;
+      document.getElementById("spinBtn").textContent = "今日已抽完";
+    }
   }
 
+  updateLabel();
   renderCoupons();
 
   // Petals
-  const p = document.getElementById("petals");
-  const symbols = ["🌸","🌷","💮","✿","❀"];
-  for (let i = 0; i < 18; i++) {
-    const d = document.createElement("div");
-    d.className = "petal";
-    d.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-    d.style.left = Math.random() * 100 + "vw";
-    d.style.animationDuration = (8 + Math.random() * 10) + "s";
-    d.style.animationDelay = (Math.random() * 12) + "s";
-    d.style.fontSize = (0.7 + Math.random() * 0.8) + "rem";
-    p.appendChild(d);
-  }
+  const pg = document.getElementById("petals");
+  ["🎂","🎁","🎈","🎉","🎊"].forEach((s, i) => {
+    for (let j = 0; j < 3; j++) {
+      const d = document.createElement("div");
+      d.className = "petal"; d.textContent = s;
+      d.style.left = Math.random() * 100 + "vw";
+      d.style.animationDuration = (10 + Math.random() * 12) + "s";
+      d.style.animationDelay   = (Math.random() * 15) + "s";
+      d.style.fontSize = (0.6 + Math.random() * 0.7) + "rem";
+      pg.appendChild(d);
+    }
+  });
 })();
 </script>
+  <!-- Fixed + button bottom-right -->
+  <button class="add-btn" onclick="addChance()" title="增加抽獎次數">＋</button>
 </body>
 </html>
